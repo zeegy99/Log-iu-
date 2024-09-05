@@ -1,0 +1,41 @@
+# def plot_nodes_with_values(grid):
+#     fig, ax = plt.subplots(figsize=(10, 10))
+    
+#     for y in range(len(grid)):  # Iterate over y (rows)
+#         for x in range(len(grid[0])):  # Iterate over x (columns)
+#             node = grid[y][x]
+#             node_x, node_y = node.location
+#             val = node.val
+            
+#             ax.plot(node_x, node_y, 'ko', ms=10)  # Plot node as black circle
+#             ax.text(node_x, node_y, f'{val:.2f}', color='blue', fontsize=12, ha='center', va='center')
+
+#             # Connecting Neighbors
+#             neighbors = node.get_neighbors()
+#             for direction, neighbor in neighbors.items():
+#                 if neighbor is not None:
+#                     nx, ny = neighbor.location
+#                     ax.plot([node_x, nx], [node_y, ny], 'k-', lw=2)
+
+
+#                     #average
+#                     #print([node_x, nx], [node_y, ny])
+#                     print("NODE_X, NODE_Y")
+#                     print((node_x, node_y))
+#                     print(grid[node_x][node_y].val)
+
+#                     print("NX, NY")
+#                     print((nx, ny))
+#                     print(grid[nx][ny].val)
+
+#                     average_val = (grid[node_x][node_y].val + grid[nx][ny].val) / 2
+
+#                     midpoint_x = (node_x + nx) / 2
+#                     midpoint_y = (node_y + ny) / 2
+#                     ax.text(midpoint_x, midpoint_y, f'{average_val:.2f}', color='red', fontsize=10, ha='center', va='center')
+
+#     ax.set_xlim(-0.5, len(grid[0]) - 0.5)
+#     ax.set_ylim(-0.5, len(grid) - 0.5)
+#     ax.set_aspect('equal')
+#     ax.grid(True)
+#     plt.show()

@@ -1,0 +1,141 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from collections import defaultdict
+import random
+from matplotlib.widgets import Slider
+
+##################
+##    ^~^  , ######
+##   ('Y') ) ######
+##   /   \/  ######
+##  (\|||/) ######
+###################
+
+class Node:
+    def __init__(self, p=-1):
+        self.neighbors = defaultdict(lambda: None)
+        temp = np.random.uniform(0, 1)
+        self.val = temp
+
+    def add_neighbor(self, direction, node):
+        self.neighbors[direction] = node
+
+    def __repr__(self):
+        return f"Node(val={self.val}, Location={self.location}, neighbors={list(self.neighbors.keys())})"
+    
+    def location(self, x, y):
+        #print(x,y)
+        self.location = (x, y)
+
+    def get_neighbors(self):
+        return self.neighbors
+
+def manhattan_distance(target_1, dist):
+    x1, y1 = target_1
+    possible_points = []
+    for dx in range(dist + 1):
+        dy = dist - dx
+        possible_points.extend([
+            (x1 + dx, y1 + dy), (x1 + dx, y1 - dy),
+            (x1 - dx, y1 + dy), (x1 - dx, y1 - dy)
+        ])
+    possible_points = list(set(possible_points))
+    return random.choice(possible_points)
+
+
+def plot_nodes_with_values(grid):
+    fig, ax = plt.subplots(figsize=(10, 10))
+    for x in range(len(grid[0])):
+        #print(f"row: {row}")
+        for y in range(len(grid)):
+            node = grid[x][y]
+            x, y = node.location
+            val = node.val
+            ax.plot(x, y, 'ko', ms=10)  # Plot node as black circle
+            ax.text(x, y, f'{val:.2f}', color='green', fontsize=8, ha='center', va='center')
+
+            #Connecting Neighbors
+            neighbors = node.get_neighbors()
+            for direction in neighbors:
+                if direction is not None:
+                    if direction == "right":
+                        nx, ny = x + 1, y  # Move to the right
+                    elif direction == "down":
+                        nx, ny = x, y + 1  # Move down
+                    elif direction == "left":
+                        nx, ny = x - 1, y  # Move to the left
+                    elif direction == "up":
+                        nx, ny = x, y - 1  # Move up
+
+                    ax.plot([x, nx], [y, ny], 'k-', lw=2)
+
+                    #print(node.location)
+                   # print(direction)
+
+                
+
+    ax.set_xlim(-0.5, len(grid[0])-0.5)
+    ax.set_ylim(-0.5, len(grid)-0.5)
+    ax.set_aspect('equal')
+    ax.grid(True)
+    plt.show()
+
+def connect_all_neighbors(grid):
+    m, n = len(grid), len(grid[0])  # m = number of rows, n = number of columns
+    for x in range(n):  # Iterate over x (columns)
+        for y in range(m):  # Iterate over y (rows)
+            node = grid[x][y]
+            print(node)
+            print(x)
+            print(y)
+            print(n)
+            print(m)
+
+            # Connect to right neighbor if within bounds
+            if x < n - 1:
+                right_neighbor = grid[x + 1][y]
+                node.add_neighbor("right", right_neighbor)
+                print(f'Connecting node ({x}, {y}) to right neighbor ({x + 1}, {y})')
+
+            # Connect to left neighbor if within bounds
+            if x > 0:
+                left_neighbor = grid[x - 1][y]
+                node.add_neighbor("left", left_neighbor)
+                print(f'Connecting node ({x}, {y}) to left neighbor ({x - 1}, {y})')
+
+            # Connect to down neighbor if within bounds
+            if y < m - 1:
+                print(y)
+                print(y+1)
+                down_neighbor = grid[x][y + 1]
+                node.add_neighbor("down", down_neighbor)
+                print(f'Connecting node ({x}, {y}) to down neighbor ({x}, {y + 1})')
+
+            # Connect to up neighbor if within bounds
+            if y > 0:
+                up_neighbor = grid[x][y - 1]
+                node.add_neighbor("up", up_neighbor)
+                print(f'Connecting node ({x}, {y}) to up neighbor ({x}, {y - 1})')
+x, y = 1, 3 
+p = 0.5
+ms_size = 3
+
+# Define your target here
+target_1 = (1, 1)
+dist = 1
+target_2 = manhattan_distance(target_1, dist)
+target_3 = (0, 1)
+
+# Create grid
+grid = [[Node(p) for _ in range(x)] for _ in range(y)]
+
+for i in range(y):
+    for j in range(x):
+        grid[i][j].location(j, i)
+print(grid)
+#print(grid)
+connect_all_neighbors(grid)
+#print("GRID")
+#print(grid)
+plot_nodes_with_values(grid)
+
